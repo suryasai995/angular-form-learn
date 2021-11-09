@@ -1,0 +1,271 @@
+{{ receviedForm | json }}
+
+<div class="alert alert-danger" *ngIf="errormsg">{{ errormsg }}</div>
+<div class="card cardmain">
+  <div class="card-body">
+    <h3 class="text-success">{{ sSavedDetails }}</h3>
+    <form
+      #userDetail="ngForm"
+      (ngSubmit)="myFrom(userDetail)"
+      *ngIf="!hiddeForm"
+    >
+      <div class="row">
+        <div class="col-6">
+          <div class="form-group">
+            <div class="mb-3">
+              <label for="exampleInputEmail1" class="form-label"
+                >User Name</label
+              >
+              <input
+                type="text"
+                class="form-control"
+                [class.is-invalid]="name.touched && name.invalid"
+                name="userName"
+                #name="ngModel"
+                required
+                [(ngModel)]="userModel.userName"
+              />
+              <small class="text-danger" *ngIf="name.touched && name.invalid"
+                >User Name is missing</small
+              >
+            </div>
+            <div class="form-group">
+              <label for="exampleInputEmail1" class="form-label"
+                >Email address</label
+              >
+              <input
+                type="email"
+                class="form-control"
+                id="exampleInputEmail1"
+                aria-describedby="emailHelp"
+                autocomplete="true"
+                email
+                #email="ngModel"
+                [class.is-invalid]="email.invalid && email.touched"
+                required
+                name="email"
+                [(ngModel)]="userModel.email"
+              />
+              <div *ngIf="email.errors && (email.invalid || email.touched)">
+                <small
+                  class="text-danger"
+                  [class.d-none]="email.errors?.required && email.untouched"
+                  >Email is Incorrect
+                </small>
+                <small
+                  class="text-danger"
+                  [class.d-none]="email.errors?.email && email.untouched"
+                  >Email is required
+                </small>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="exampleInputPassword1" class="form-label"
+                >Password</label
+              >
+              <input
+                type="password"
+                class="form-control"
+                id="exampleInputPassword1"
+                #passWord="ngModel"
+                required
+                name="passWord"
+                [(ngModel)]="userModel.passWord"
+                [class.is-invalid]="passWord.invalid && passWord.touched"
+              />
+              <small class="text-danger" *ngIf="name.touched && name.invalid"
+                >PassWord is required</small
+              >
+            </div>
+            <div class="form-group">
+              <label for="exampleInputPassword1" class="form-label"
+                >Phone Number</label
+              >
+              <input
+                type="tel"
+                class="form-control"
+                pattern="^\d{10}$"
+                #phoneNumber="ngModel"
+                required
+                autocomplete="true"
+                name="phoneNumber"
+                [class.is-invalid]="phoneNumber.invalid && phoneNumber.touched"
+                [(ngModel)]="userModel.phoneNumber"
+              />
+              <div
+                *ngIf="
+                  phoneNumber.errors &&
+                  (phoneNumber.invalid || phoneNumber.touched)
+                "
+              >
+                <small
+                  class="text-danger"
+                  [class.d-none]="
+                    phoneNumber.errors?.pattern && phoneNumber.untouched
+                  "
+                  >phone number is required
+                </small>
+                <small
+                  class="text-danger"
+                  [class.d-none]="
+                    phoneNumber.errors?.required && phoneNumber.untouched
+                  "
+                  >phone number is incorrect
+                </small>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Select course</label>
+              <select
+                (blur)="validationSelection(course.value)"
+                (change)="validationSelection(course.value)"
+                class="form-select"
+                aria-label="Default select example"
+                #course="ngModel"
+                name="course"
+                required
+                [(ngModel)]="userModel.course"
+                [class.is-invalid]="opstionErro && course.touched"
+              >
+                <!--blur & change evens can handly the validationSelection function from class which can used 
+            to find the selected opitions is  correct  -->
+                <option value="default">Open this select menu</option>
+                <option *ngFor="let x of courseList">
+                  {{ x }}
+                </option>
+              </select>
+              <small
+                class="text-danger"
+                [class.d-none]="!opstionErro || course.untouched"
+                >Choose topic in cources</small
+              >
+              <!--  opstion is Boolean property which hold all true or false based on validationSeleted function
+              class.d-none is bootstrap css  propery
+              -->
+            </div>
+
+            <div class="mb-3 form-check">
+              <input
+                type="checkbox"
+                checked
+                class="form-check-input"
+                id="exampleCheck1"
+                name="trems"
+                #trems="ngModel"
+                required
+                [(ngModel)]="userModel.trems"
+              />
+              <label class="form-check-label" for="exampleCheck1"
+                >I am agree with it</label
+              >
+              <small class="text-danger" *ngIf="!trems.value"
+                >Please accecpt trems</small
+              >
+            </div>
+          </div>
+        </div>
+        <div class="col-6">
+          <small>Select Gender</small>
+
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="gender"
+              id="gender"
+              value="Male"
+              name="gender"
+              [(ngModel)]="userModel.gender"
+              #gender="ngModel"
+              [checked]="gender.value"
+              required
+            />
+            <label class="form-check-label" for="flexRadioDefault1">
+              Male
+            </label>
+          </div>
+          <div class="form-check">
+            <input
+              class="form-check-input"
+              type="radio"
+              name="gender"
+              value="FeMale"
+              name="gender"
+              [(ngModel)]="userModel.gender"
+              #gender="ngModel"
+              [checked]="gender.value"
+              required
+            />
+            <label class="form-check-label" for="flexRadioDefault2">
+              Female
+            </label>
+            <br />
+            <small class="text-danger" *ngIf="!gender.value"
+              >Gender required*</small
+            >
+          </div>
+
+          <div class="form-group">
+            <div class="mb-3">
+              <label class="form-label">User Address</label>
+              <input
+                type="text"
+                class="form-control"
+                name="address"
+                required
+                [(ngModel)]="userModel.address"
+                #address="ngModel"
+                [class.is-invalid]="address.invalid && address.touched"
+              />
+              <small
+                class="text-danger"
+                *ngIf="address.invalid && address.touched"
+                >Address is required*</small
+              >
+            </div>
+
+            <div class="mb-3">
+              <label>State From</label>
+              <input
+                type="text"
+                class="form-control"
+                name="state"
+                [(ngModel)]="userModel.state"
+                #state="ngModel"
+                required
+                [class.is-invalid]="state.invalid && state.touched"
+              />
+              <small class="text-danger" *ngIf="state.invalid && state.touched"
+                >Address is required*</small
+              >
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Contry</label>
+              <input
+                type="text"
+                class="form-control"
+                name="contry"
+                [(ngModel)]="userModel.contry"
+                #contry="ngModel"
+                required
+                [class.is-invalid]="contry.invalid && contry.touched"
+              />
+              <small class="text-danger" *ngIf="state.invalid && state.touched"
+                >Address is required*</small
+              >
+            </div>
+          </div>
+        </div>
+        <div>
+          <button
+            type="submit"
+            [disabled]="!userDetail.valid && opstionErro"
+            class="btn btn-primary"
+          >
+            Submit
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
